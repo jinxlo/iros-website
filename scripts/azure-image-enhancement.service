@@ -1,0 +1,16 @@
+[Unit]
+Description=Iros Electronics Azure product image enhancement
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/jinxlo/iroselectronics
+ExecStart=/home/jinxlo/iroselectronics/scripts/run-azure-image-enhancement-service.sh
+Restart=on-failure
+RestartSec=60
+StandardOutput=append:/home/jinxlo/iroselectronics/public/azure-images/service.log
+StandardError=append:/home/jinxlo/iroselectronics/public/azure-images/service.log
+
+[Install]
+WantedBy=default.target

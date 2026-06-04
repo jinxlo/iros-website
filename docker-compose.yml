@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: iroselectronics_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: iros
+      POSTGRES_PASSWORD: irospass
+      POSTGRES_DB: iroselectronics
+    ports:
+      - "5434:5432"
+    volumes:
+      - iroselectronics_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iros -d iroselectronics"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    container_name: iroselectronics_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_SITE_URL: http://localhost:3003
+      NEXT_PUBLIC_SITE_NAME: iroselectronics
+      NEXT_PUBLIC_SITE_DOMAIN: iroselectronics.com
+      NEXT_PUBLIC_DEFAULT_LOCALE: es
+      LOCAL_DATABASE_URL: postgresql://iros:irospass@db:5432/iroselectronics
+      LOCAL_AUTH_SECRET: change-this-local-auth-secret
+      ADMIN_API_KEY: iros-admin-local-key-change-me
+      ODOO_BASE_URL: ${ODOO_BASE_URL:-}
+      ODOO_DATABASE: ${ODOO_DATABASE:-}
+      ODOO_USERNAME: ${ODOO_USERNAME:-}
+      ODOO_LOGIN: ${ODOO_LOGIN:-}
+      ODOO_PASSWORD: ${ODOO_PASSWORD:-}
+      ODOO_API_KEY: ${ODOO_API_KEY:-}
+      ODOO_WEBHOOK_API_KEY: ${ODOO_WEBHOOK_API_KEY:-}
+      ODOO_WEBHOOK_ALLOWED_IPS: ${ODOO_WEBHOOK_ALLOWED_IPS:-}
+      ODOO_SYNC_LIMIT: ${ODOO_SYNC_LIMIT:-200}
+      ODOO_PRODUCT_MODEL: ${ODOO_PRODUCT_MODEL:-product.template}
+      ODOO_CATEGORY_MODEL: ${ODOO_CATEGORY_MODEL:-product.category}
+      ODOO_PRODUCT_IMAGE_FIELD: ${ODOO_PRODUCT_IMAGE_FIELD:-image_1920}
+      ODOO_PRODUCT_SKU_FIELD: ${ODOO_PRODUCT_SKU_FIELD:-default_code}
+      ODOO_PRODUCT_PRICE_FIELD: ${ODOO_PRODUCT_PRICE_FIELD:-list_price}
+      ODOO_PRODUCT_STOCK_FIELD: ${ODOO_PRODUCT_STOCK_FIELD:-qty_available}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+      AZURE_API_KEY: ${AZURE_API_KEY:-}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT:-}
+      AZURE_OPENAI_DEPLOYMENT_NAME: ${AZURE_OPENAI_DEPLOYMENT_NAME:-gpt-image-2}
+      OPENAI_API_VERSION: ${OPENAI_API_VERSION:-2025-04-01-preview}
+    ports:
+      - "3003:3003"
+
+volumes:
+  iroselectronics_db_data:

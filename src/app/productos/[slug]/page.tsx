@@ -1,6 +1,8 @@
 import { ProductDetailPage, ProductNotFoundPage } from "@/components/product-detail-page";
 import { getActiveProductBySlug } from "@/lib/data/products";
 
+export const dynamic = "force-dynamic";
+
 type ProductPageProps = {
   params: Promise<{
     slug: string;

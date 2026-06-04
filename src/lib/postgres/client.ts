@@ -4,7 +4,7 @@ import { getOptionalEnv } from "@/lib/env";
 let pool: Pool | undefined;
 
 function resolveConnectionString() {
-  const explicit = getOptionalEnv("LOCAL_DATABASE_URL") || getOptionalEnv("POSTGRES_URL");
+  const explicit = getOptionalEnv("LOCAL_DATABASE_URL") || getOptionalEnv("POSTGRES_URL") || getOptionalEnv("DATABASE_URL");
 
   if (explicit) {
     return explicit;
@@ -23,7 +23,7 @@ function resolveConnectionString() {
   }
 
   throw new Error(
-    "Missing local PostgreSQL configuration. Set LOCAL_DATABASE_URL or LOCAL_DB_HOST/LOCAL_DB_NAME/LOCAL_DB_USER.",
+    "Missing PostgreSQL configuration. Set LOCAL_DATABASE_URL, POSTGRES_URL, DATABASE_URL, or LOCAL_DB_HOST/LOCAL_DB_NAME/LOCAL_DB_USER.",
   );
 }
 

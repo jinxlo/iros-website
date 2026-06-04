@@ -1,6 +1,8 @@
 import { CatalogPage } from "@/components/catalog-page";
 import { getActiveProducts, getCatalogFilterOptions } from "@/lib/data/products";
 
+export const dynamic = "force-dynamic";
+
 type EnglishProductsPageProps = {
   searchParams: Promise<{
     q?: string;

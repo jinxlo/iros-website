@@ -7,6 +7,18 @@ const nextConfig: NextConfig = {
     "localhost",
     "127.0.0.1",
   ],
+  async rewrites() {
+    const privateApiBaseUrl = process.env.PRIVATE_API_BASE_URL?.replace(/\/$/, "");
+
+    return privateApiBaseUrl
+      ? [
+          {
+            source: "/api/:path*",
+            destination: `${privateApiBaseUrl}/api/:path*`,
+          },
+        ]
+      : [];
+  },
 };
 
 export default nextConfig;
